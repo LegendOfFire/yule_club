@@ -56,10 +56,21 @@
         }
     }
         
+        function enterUsername()
+        {
+            $("#username_missed").css("display","none");
+        }
+        
         function checkAllDatas(){
+            
             if(mailcheck == false){
                 $("#mailPassed").css("display","none");
                 $("#mailWrong").css("display","inline");  
+                return false;
+            }
+            
+            if($("#username").val() == ""){
+                $("#username_missed").css("display","inline");
                 return false;
             }
             
@@ -108,8 +119,11 @@
 			        <div class="form-group">
 			          <div class="col-xs-6">		          	
 			            <label for="username" class="control-label">Username</label>
-			            <input type="text" class="form-control" id="username" name="username" placeholder="">		            		            		            
+			            <input type="text" class="form-control" id="username" name="username" placeholder="" onblur="enterUsername()">		            		            		            
 			          </div>
+                      <div class="col-xs-1" style="padding-top: 35px;" >
+                         <i class="fa fa-times" aria-hidden="true" id="username_missed"></i>
+                      </div>
 <!--			          <div class="col-xs-6 templatemo-radio-group">
 			          	<label class="radio-inline">
 		          			<input type="radio" name="optionsRadios" id="optionsRadios1" name="optionsRadios1" value="option1"> Male
@@ -180,5 +194,6 @@
         $("#mailWrong").css("display","none");
         $("#wrong").css("display","none");
         $("#passed").css("display","none");
+        $("#username_missed").css("display","none");
 </script>>
 </html>
