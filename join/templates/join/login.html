@@ -16,12 +16,13 @@
 	<div class="container">
 		<div class="col-md-12">
 			<h1 class="margin-bottom-15">Login Form One</h1>
-			<form class="form-horizontal templatemo-container templatemo-login-form-1 margin-bottom-30" role="form" action="#" method="post">				
+			<form class="form-horizontal templatemo-container templatemo-login-form-1 margin-bottom-30" role="form" action="{% url 'join:sign-in' %}" method="post">				
+			  {% csrf_token %}
 		        <div class="form-group">
 		          <div class="col-xs-12">		            
 		            <div class="control-wrapper">
 		            	<label for="username" class="control-label fa-label"><i class="fa fa-user fa-medium"></i></label>
-		            	<input type="text" class="form-control" id="username" placeholder="Username">
+		            	<input type="text" name="username" class="form-control" id="username" placeholder="Username">
 		            </div>		            	            
 		          </div>              
 		        </div>

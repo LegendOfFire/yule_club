@@ -24,8 +24,8 @@ def sign_up(request):
 
 
 def sign_in(request):
-    user_name = request.POST['user_name']
-    email = request.POST['email']
+    user_name = request.POST['username']
+#    email = request.POST['email']
     context = {'username': user_name,
-               'email': email}
+               'email': None}
     return render(request, 'join/sign-in.html', context)
