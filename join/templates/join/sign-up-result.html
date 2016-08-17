@@ -1,0 +1,7 @@
+{% if result == 'OK' %}
+<p>You successfully sign up!</p>
+<a href="{% url 'join:home' %}">Click here to login</a>
+{% else %}
+<p>You failed to sign up!</p>
+<a href="{% url 'join:create-account' %}">Click here to sign up again</a>
+{% endif %}

@@ -85,14 +85,12 @@
         }
 </script>
 </head>
-
-
-
 <body class="templatemo-bg-gray">
 	<h1 class="margin-bottom-12">Create Account</h1>
 	<div class="container">
 		<div class="col-xs-12">			
-			<form class="form-horizontal templatemo-create-account templatemo-container" role="form" onsubmit="return checkAllDatas()" method="post" action="#">
+		  <form class="form-horizontal templatemo-create-account templatemo-container" role="form" action="{% url 'join:sign-up' %}" method="post">
+		    {% csrf_token %}
 				<div class="form-inner">
 <!--					<div class="form-group">
 			          <div class="col-xs-6">		          	
@@ -160,7 +158,7 @@
 			        <div class="form-group">
 			          <div class="col-xs-12">
 			            <input type="submit" value="Create account" class="btn btn-info">
-			            <a href="login.html" class="pull-right">Login</a>
+			            <a href="{% url 'join:home' %}" class="pull-right">Login</a>
 			          </div>
 			        </div>	
 				</div>				    	
