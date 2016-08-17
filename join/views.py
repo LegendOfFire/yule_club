@@ -25,8 +25,8 @@ def sign_up(request):
                     reg_date=current_time, join_times=0)
     member.save()
     request.session['member_id'] = member.pk
-    context = {'result': 'OK'}
-    return render(request, 'join/sign-up-result.html', context)
+    context = {'member': member}
+    return render(request, 'join/user.html', context)
 
 
 def sign_in(request):
@@ -35,3 +35,12 @@ def sign_in(request):
     context = {'username': user_name,
                'email': None}
     return render(request, 'join/sign-in.html', context)
+
+
+def join_game(request):
+    m_id = request.session['member_id']
+    member = Member.objects.get(pk=m_id)
+    member.is_joined = True
+    member.save()
+    context = {'member': member}
+    return render(request, 'join/user.html', context)

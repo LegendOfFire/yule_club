@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 
 <head>
@@ -7,15 +8,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-	<link href="css/templatemo_style.css" rel="stylesheet" type="text/css">	
+	<link href="{% static 'join/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'join/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'join/css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'join/css/templatemo_style.css' %}" rel="stylesheet" type="text/css">	
     
 </head>
 
 <body class="templatemo-bg-gray">
-	<h1 class="margin-bottom-12">Welcome {{Username}}</h1>
+	<h1 class="margin-bottom-12">Welcome {{ member.user_name }}</h1>
     
     <div class="container">
     <div class="form-group">
@@ -23,22 +24,26 @@
         <a href="login.html" class="pull-right">Login out</a>
         <br>
         <h2 class="margin-bottom-12">Next game wil be {{nextweek}}</h2>
-        <h2 class="margin-bottom-12">{{name list}}</h2>
+        <h2 class="margin-bottom-12">{{ member.user_name }}</h2>
         <h2 class="margin-bottom-12">等你来战</h2>
 	
 	</div>
     </div>
+      <form role="form" action="{% url 'join:join-game' %}">
+      {% csrf_token %}
     <div class="form-group" id="button_grid">
+
     <div class="col-xs-2 col-md-offset-5" id="join">
-        <button type="button" class="btn btn-success">Join</button>
+        <button type="submit" class="btn btn-success">Join</button>
     </div>
     <div class="col-xs-2" id ="cancel">
-        <button type="button"  class="btn btn-warning">Cancel</button>
+        <button type="button" class="btn btn-warning">Cancel</button>
     </div>
     </div>
+    </form>
     </div>
-	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{% static 'join/js/jquery-1.11.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'join/js/bootstrap.min.js' %}"></script>
 </body>
 
 <script>
