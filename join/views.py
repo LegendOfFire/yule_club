@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from .models import Member
 
 
@@ -18,7 +19,12 @@ def create_account(request):
 def sign_up(request):
     user_name = request.POST['username']
     email = request.POST['email']
-    member = Member(user_name=user_name, email=email)
+    current_time = timezone.now()
+
+    member = Member(user_name=user_name, email_addr=email, is_joined=False,
+                    reg_date=current_time, join_times=0)
+    member.save()
+    request.session['member_id'] = member.pk
     context = {'result': 'OK'}
     return render(request, 'join/sign-up-result.html', context)
 
