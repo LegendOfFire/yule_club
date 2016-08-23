@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from .models import Member
-
+import datetime
 
 # Create your views here.
 def home(request):
@@ -32,8 +32,11 @@ def sign_up(request):
 def sign_in(request):
     user_name = request.POST['username']
 #    email = request.POST['email']
+    today = timezone.now()
+    week_num = datetime.date(today.year, today.month, today.day).isocalendar()[1]
     context = {'username': user_name,
-               'email': None}
+               'email': None,
+               'week_num': week_num, }
     return render(request, 'join/sign-in.html', context)
 
 

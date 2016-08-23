@@ -11,6 +11,15 @@ class Member(models.Model):
     reg_date = models.DateTimeField("Registration Date")
     is_joined = models.BooleanField("Join or Not")
     join_times = models.IntegerField("Join Times")
+    is_leader = models.BooleanField("Leader Role", default=False)
 
     def __str__(self):
         return "Member Information"
+
+
+class Enrollments(models.Model):
+    week_num = models.IntegerField("Week Number", unique=True)
+    counts = models.IntegerField("Enrollment")
+
+    def __str__(self):
+        return "Enrollment History"
