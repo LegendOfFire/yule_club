@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from .models import Member
-import .utils
+import utils
+
 
 # Create your views here.
 def home(request):
@@ -26,7 +27,7 @@ def sign_up(request):
     member.save()
 
     game_status = 'NOT OPEN'
-    if untils.is_enrollment_opened():
+    if utils.is_enrollment_opened():
         game_status = 'OPEN'
 
     #Add id into session for later usage
@@ -47,7 +48,7 @@ def sign_in(request):
         raise Http404("User does not exist")
 
     game_status = 'NOT OPEN'
-    if untils.is_enrollment_opened():
+    if utils.is_enrollment_opened():
         game_status = 'OPEN'
 
     context = {'member': member,
