@@ -7,26 +7,28 @@
 	<meta name="description" content="" />
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
 	<link href="{% static 'join/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'join/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
 	<link href="{% static 'join/css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css">
-	<link href="{% static 'join/css/templatemo_style.css' %}" rel="stylesheet" type="text/css">	
-    
+	<link href="{% static 'join/css/templatemo_style.css' %}" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="templatemo-bg-gray">
 	<h1 class="margin-bottom-12">Welcome {{ member.user_name }}</h1>
-    
+
     <div class="container">
     <div class="form-group">
 	<div class="col-xs-12">
         <a href="login.html" class="pull-right">Login out</a>
         <br>
-        <h2 class="margin-bottom-12">Next game wil be {{nextweek}}</h2>
-        <h2 class="margin-bottom-12">{{ member.user_name }}</h2>
+				{% if game_status == "OPEN" %}
+        <h2 class="margin-bottom-12">Game is open for enrollment!</h2>
         <h2 class="margin-bottom-12">等你来战</h2>
-	
+				{% else %}
+        <h2 class="margin-bottom-12">Game is not open. Please wait.</h2>
+				{% endif %}
 	</div>
     </div>
       <form role="form" action="{% url 'join:join-game' %}">
@@ -51,5 +53,5 @@
     $("#Cancel").css("margin-left",$("#button_grid").width()/2 + $("#Cancel").width() + "px")
 </script>
 
-    
+
 </html>

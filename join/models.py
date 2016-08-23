@@ -20,6 +20,7 @@ class Member(models.Model):
 class Enrollments(models.Model):
     week_num = models.IntegerField("Week Number", unique=True)
     counts = models.IntegerField("Enrollment")
+    status = models.BooleanField("Opened", default = True)
 
     def __str__(self):
         return "Enrollment History"

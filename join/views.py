@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from .models import Member
-import datetime
+import .utils
 
 # Create your views here.
 def home(request):
@@ -24,20 +24,35 @@ def sign_up(request):
     member = Member(user_name=user_name, email_addr=email, is_joined=False,
                     reg_date=current_time, join_times=0)
     member.save()
+
+    game_status = 'NOT OPEN'
+    if untils.is_enrollment_opened():
+        game_status = 'OPEN'
+
+    #Add id into session for later usage
     request.session['member_id'] = member.pk
-    context = {'member': member}
+
+    #prepare context information
+    context = { 'member': member,
+                'game_status': game_status}
     return render(request, 'join/user.html', context)
 
 
 def sign_in(request):
     user_name = request.POST['username']
-#    email = request.POST['email']
-    today = timezone.now()
-    week_num = datetime.date(today.year, today.month, today.day).isocalendar()[1]
-    context = {'username': user_name,
-               'email': None,
-               'week_num': week_num, }
-    return render(request, 'join/sign-in.html', context)
+    #qurey if user exists, other wise raise exception
+    try:
+        member = Member.objects.get(user_name=user_name)
+    except Member.DoesNotExist:
+        raise Http404("User does not exist")
+
+    game_status = 'NOT OPEN'
+    if untils.is_enrollment_opened():
+        game_status = 'OPEN'
+
+    context = {'member': member,
+               'game_status':  game_status}
+    return render(request, 'join/user.html', context)
 
 
 def join_game(request):
