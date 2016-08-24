@@ -30,18 +30,18 @@ def sign_up(request):
     if utils.is_enrollment_opened():
         game_status = 'OPEN'
 
-    #Add id into session for later usage
+    # Add id into session for later usage
     request.session['member_id'] = member.pk
 
-    #prepare context information
-    context = { 'member': member,
-                'game_status': game_status}
+    # prepare context information
+    context = {'member': member,
+               'game_status': game_status}
     return render(request, 'join/user.html', context)
 
 
 def sign_in(request):
     user_name = request.POST['username']
-    #qurey if user exists, other wise raise exception
+    # qurey if user exists, other wise raise exception
     try:
         member = Member.objects.get(user_name=user_name)
     except Member.DoesNotExist:
