@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from .models import Member
+from .models import Member, Enrollments
 import utils
 
 
@@ -35,7 +35,8 @@ def sign_up(request):
 
     # prepare context information
     context = {'member': member,
-               'game_status': game_status}
+               'game_status': game_status,
+               'information': ''}
     return render(request, 'join/user.html', context)
 
 
@@ -52,7 +53,10 @@ def sign_in(request):
         game_status = 'OPEN'
 
     context = {'member': member,
-               'game_status':  game_status}
+               'game_status':  game_status,
+               'information': ""}
+
+    request.session['member_id'] = member.pk
     return render(request, 'join/user.html', context)
 
 
@@ -61,5 +65,26 @@ def join_game(request):
     member = Member.objects.get(pk=m_id)
     member.is_joined = True
     member.save()
-    context = {'member': member}
+    context = {'member': member,
+               'game_status': 'OPEN',
+               'information': ''}
+    return render(request, 'join/user.html', context)
+
+
+def open_game(request):
+    m_id = request.session['member_id']
+    week_id = utils.get_current_week()
+    information = 'Game is already opened.'
+
+    try:
+        Enrollments.objects.get(week_num=week_id)
+    except Enrollments.DoesNotExist:
+        game = Enrollments(week_num=week_id)
+        game.save()
+        information = 'Game is opened successfully!'
+
+    member = Member.objects.get(pk=m_id)
+    context = {'member': member,
+               'game_status': 'OPEN',
+               'information': information}
     return render(request, 'join/user.html', context)
