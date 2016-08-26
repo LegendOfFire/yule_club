@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from .models import Member, Enrollments
+from .models import Member, Enrollment
 import utils
 
 
@@ -26,17 +26,19 @@ def sign_up(request):
                     reg_date=current_time, join_times=0)
     member.save()
 
-    game_status = 'NOT OPEN'
-    if utils.is_enrollment_opened():
-        game_status = 'OPEN'
-
     # Add id into session for later usage
     request.session['member_id'] = member.pk
 
     # prepare context information
     context = {'member': member,
-               'game_status': game_status,
-               'information': ''}
+               'information_game': utils.game_status_tips[
+                   utils.get_game_status_for_current_week()],
+               'information_user': utils.member_enrollment_status_tips[
+                   utils.get_enrollment_status_for_current_user(member)
+               ],
+               'information_leader': utils.leader_status_tips[
+                   utils.get_leader_status()
+               ]}
     return render(request, 'join/user.html', context)
 
 
@@ -48,13 +50,15 @@ def sign_in(request):
     except Member.DoesNotExist:
         raise Http404("User does not exist")
 
-    game_status = 'NOT OPEN'
-    if utils.is_enrollment_opened():
-        game_status = 'OPEN'
-
     context = {'member': member,
-               'game_status':  game_status,
-               'information': ""}
+               'information_game': utils.game_status_tips[
+                   utils.get_game_status_for_current_week()],
+               'information_user': utils.member_enrollment_status_tips[
+                   utils.get_enrollment_status_for_current_user(member)
+               ],
+               'information_leader': utils.leader_status_tips[
+                   utils.get_leader_status()
+               ]}
 
     request.session['member_id'] = member.pk
     return render(request, 'join/user.html', context)
@@ -63,28 +67,51 @@ def sign_in(request):
 def join_game(request):
     m_id = request.session['member_id']
     member = Member.objects.get(pk=m_id)
-    member.is_joined = True
-    member.save()
+    if member.is_joined:
+        member_enrollment_status_index = 3
+    else:
+        member.is_joined = True
+        member.save()
+        member_enrollment_status_index = 2
+
     context = {'member': member,
-               'game_status': 'OPEN',
-               'information': ''}
+               'information_game': utils.game_status_tips[
+                   utils.get_game_status_for_current_week()],
+               'information_user': utils.member_enrollment_status_tips[
+                   member_enrollment_status_index
+               ],
+               'information_leader': utils.leader_status_tips[
+                   utils.get_leader_status()
+               ]}
+
     return render(request, 'join/user.html', context)
 
 
 def open_game(request):
     m_id = request.session['member_id']
     week_id = utils.get_current_week()
-    information = 'Game is already opened.'
+    leader_status_index = utils.get_leader_status()
 
-    try:
-        Enrollments.objects.get(week_num=week_id)
-    except Enrollments.DoesNotExist:
-        game = Enrollments(week_num=week_id)
-        game.save()
-        information = 'Game is opened successfully!'
+    if leader_status_index == 1:
+        leader_status_index = 3
+    else:
+        if leader_status_index == 0:
+            game = Enrollment(week_num=week_id)
+            game.save()
+        else:
+            game.status = True
+        leader_status_index = 2
 
     member = Member.objects.get(pk=m_id)
+
     context = {'member': member,
-               'game_status': 'OPEN',
-               'information': information}
+               'information_game': utils.game_status_tips[
+                   utils.get_game_status_for_current_week()],
+               'information_user': utils.member_enrollment_status_tips[
+                   utils.get_enrollment_status_for_current_user(member)
+               ],
+               'information_leader': utils.leader_status_tips[
+                   leader_status_index
+               ]}
+
     return render(request, 'join/user.html', context)

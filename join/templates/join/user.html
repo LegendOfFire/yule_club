@@ -16,17 +16,15 @@
 </head>
 
 <body class="templatemo-bg-gray">
-	<h1 class="margin-bottom-12">Welcome {{ member.user_name }}</h1>
+	<h1 class="margin-bottom-12">Welcome, {{ member.user_name }}!</h1>
 
 	<!-- Visble for all members -->
 	<div class="container">
 		<div class="form-group">
 			<div class="col-xs-12">
 				<a href="{% url 'join:home' %}" class="pull-right">Log Out</a>
-				<br> {% if game_status == "OPEN" %}
-				<h2 class="margin-bottom-12">Game is open for enrollment!</h2>
-				<h2 class="margin-bottom-12">等你来战</h2> {% else %}
-				<h2 class="margin-bottom-12">Game is not open. Please wait.</h2> {% endif %}
+				<!-- Display the game information -->
+				<h2 class="margin-bottom-12">{{information_game}}</h2>
 			</div>
 		</div>
 		<form role="form" action="{% url 'join:join-game' %}">
@@ -40,6 +38,9 @@
 				</div>
 			</div>
 		</form>
+		<div class="col-xs-12">
+			<h2 class="margin-bottom-12">{{information_user}}</h2>
+		</div>
 	</div>
 
 	<!-- Visible only for the leader -->
@@ -57,7 +58,7 @@
 			</div>
 		</form>
 		<div class="col-xs-12">
-			<h2 class="margin-bottom-12">{{information}}</h2>
+			<h2 class="margin-bottom-12">{{information_leader}}</h2>
 		</div>
 	</div>
 	{% endif %}

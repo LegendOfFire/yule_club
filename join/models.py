@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-
 from django.db import models
 
 
@@ -14,13 +13,13 @@ class Member(models.Model):
     is_leader = models.BooleanField("Leader Role", default=False)
 
     def __str__(self):
-        return "Member Information"
+        return "Member List"
 
 
-class Enrollments(models.Model):
+class Enrollment(models.Model):
     week_num = models.IntegerField("Week Number", unique=True)
-    counts = models.IntegerField("Enrollment", default=0)
-    status = models.BooleanField("Opened", default=True)
+    counts = models.IntegerField("Enrollment Number", default=0)
+    status = models.BooleanField("Open for Enrollment", default=True)
 
     def __str__(self):
         return "Enrollment History"
