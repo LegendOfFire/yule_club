@@ -29,6 +29,7 @@ def sign_up(request):
     # Add id into session for later usage
     request.session['member_id'] = member.pk
 
+    paticipants = utils.get_all_paticipants()
     # prepare context information
     context = {'member': member,
                'information_game': utils.game_status_tips[
@@ -38,7 +39,10 @@ def sign_up(request):
                ],
                'information_leader': utils.leader_status_tips[
                    utils.get_leader_status()
-               ]}
+               ],
+               'counts': len(paticipants),
+               'paticipants': paticipants,
+               }
     return render(request, 'join/user.html', context)
 
 
@@ -50,6 +54,8 @@ def sign_in(request):
     except Member.DoesNotExist:
         raise Http404("User does not exist")
 
+    paticipants = utils.get_all_paticipants()
+
     context = {'member': member,
                'information_game': utils.game_status_tips[
                    utils.get_game_status_for_current_week()],
@@ -58,7 +64,10 @@ def sign_in(request):
                ],
                'information_leader': utils.leader_status_tips[
                    utils.get_leader_status()
-               ]}
+               ],
+               'counts': len(paticipants),
+               'paticipants': paticipants,
+               }
 
     request.session['member_id'] = member.pk
     return render(request, 'join/user.html', context)
@@ -74,6 +83,7 @@ def join_game(request):
         member.save()
         member_enrollment_status_index = 2
 
+    paticipants = utils.get_all_paticipants()
     context = {'member': member,
                'information_game': utils.game_status_tips[
                    utils.get_game_status_for_current_week()],
@@ -82,7 +92,10 @@ def join_game(request):
                ],
                'information_leader': utils.leader_status_tips[
                    utils.get_leader_status()
-               ]}
+               ],
+               'counts': len(paticipants),
+               'paticipants': paticipants,
+               }
 
     return render(request, 'join/user.html', context)
 
@@ -103,7 +116,7 @@ def open_game(request):
         leader_status_index = 2
 
     member = Member.objects.get(pk=m_id)
-
+    paticipants = utils.get_all_paticipants()
     context = {'member': member,
                'information_game': utils.game_status_tips[
                    utils.get_game_status_for_current_week()],
@@ -112,6 +125,9 @@ def open_game(request):
                ],
                'information_leader': utils.leader_status_tips[
                    leader_status_index
-               ]}
+               ],
+               'counts': len(paticipants),
+               'paticipants': paticipants,
+               }
 
     return render(request, 'join/user.html', context)

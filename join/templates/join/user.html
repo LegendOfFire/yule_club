@@ -27,6 +27,16 @@
 				<h2 class="margin-bottom-12">{{information_game}}</h2>
 			</div>
 		</div>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<h2>当前活动报名人数: {{counts}}</h2>
+					<ul>
+					{% for member in paticipants %}
+						<li>{{member.user_name}}</li>
+					{% endfor %}
+					</ul>
+			</div>
+		</div>
 		<form role="form" action="{% url 'join:join-game' %}">
 			{% csrf_token %}
 			<div class="form-group" id="button_grid">

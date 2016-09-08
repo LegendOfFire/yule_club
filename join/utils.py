@@ -1,4 +1,4 @@
-from .models import Enrollment
+from .models import Member, Enrollment
 from django.utils import timezone
 import datetime
 
@@ -17,6 +17,17 @@ leader_status_tips = {0: "You haven't open the enrollment",
                       2: "You successfully open the enrollment",
                       3: "You can't open the same game twice",
                       4: "You have closed the game."}
+
+
+def get_all_paticipants():
+    all_members = Member.objects.all()
+    paticipants = []
+
+    for member in all_members:
+        if member.is_joined:
+            paticipants.append(member)
+
+    return paticipants
 
 
 def get_current_week():
