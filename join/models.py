@@ -4,8 +4,8 @@ from django.db import models
 
 # Create your models here.
 class Member(models.Model):
-    user_name = models.CharField("Name", max_length=64)
-    email_addr = models.EmailField("E-mail")
+    nick_name = models.CharField("Nick Name", max_length=64, unique=True)
+    email_addr = models.EmailField("E-mail", unique=True)
 #    password = models.CharField("Password", max_length=16)
     reg_date = models.DateTimeField("Registration Date")
     is_joined = models.BooleanField("Join or Not")

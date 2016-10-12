@@ -43,12 +43,27 @@
             if ($("#nickname").val() != "") {
                 $("#namePassed").css("display", "inline")
                 $("#nameWrong").css("display", "none");
-                return
+                namecheck = true;
             } else {
                 $("#namePassed").css("display", "none");
                 $("#nameWrong").css("display", "none");
             }
 
+        }
+
+        function checkAllFields() {
+
+            if (mailcheck == false) {
+                $("#mailPassed").css("display", "none");
+                $("#mailWrong").css("display", "inline");
+                return false;
+            }
+
+            if (namecheck == false) {
+                $("#namePassed").css("display", "none");
+                $("#nameWrong").css("display", "inline");
+                return false;
+            }
         }
     </script>
 </head>
@@ -61,8 +76,8 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#"><i class="fa fa-sign-in fa-xs"></i> Log in</a></li>
-                <li><a href="{% url 'join:sign-up' %}"><i class="fa fa-user-plus fa-xs"></i> Sign up</a></li>
+                <li><a href="{% url 'join:home' %}"><i class="fa fa-sign-in fa-xs"></i> Log in</a></li>
+                <li class="active"><a href="#"><i class="fa fa-user-plus fa-xs"></i> Sign up</a></li>
             </ul>
 
         </div>
@@ -81,32 +96,20 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-offset-2 col-sm-8">
-                <form class="form-horizontal login-form" role="form" action="{% url 'join:sign-in' %}" method="post">
+                <form role="form" class="form-horizontal login-form" action="{% url 'join:sign-up-handling' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="col-sm-offset-2" style="padding-left: 15px">
                             <p class="text-muted text-center" style="font-size: 120%">
-                                Log in with <em class="text-info">Nick name</em> or <em class="text-info">Ericsson email</em>.
+                                Sign up with <em class="text-info">Ericsson email address</em>.
                             </p>
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label for="nickname" class="col-sm-2 control-label"><i class="fa fa-user fa-lg"></i></label>
-                        <div class="col-sm-8">
-                            <input type="text" name="nickname" id="nickname" class="form-control" placeholder="Please enter your nick name." onblur="checkNickName()">
-                        </div>
-                        <div class="col-sm-2">
-                            <i class="fa fa-check fa-lg" aria-hidden="true" id="namePassed"></i>
-                            <i class="fa fa-times fa-lg" aria-hidden="true" id="nameWrong"></i>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-offset-2" style="padding-left: 15px; font-size:120%; margin-bottom:0"><strong>Or</strong></label>
-                    </div>
+
                     <div class="form-group">
                         <label for="email" class="col-sm-2 control-label"><i class="fa fa-envelope fa-lg"></i></label>
                         <div class="col-sm-8">
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Please enter your Ericsson email." onblur="checkEmail()">
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Please enter an Ericsson email address." onblur="checkEmail()">
                         </div>
                         <div class="col-sm-2">
                             <i class="fa fa-check fa-lg" aria-hidden="true" id="mailPassed"></i>
@@ -115,16 +118,27 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="nickname" class="col-sm-2 control-label"><i class="fa fa-user fa-lg"></i></label>
+                        <div class="col-sm-8">
+                            <input type="text" name="nickname" id="nickname" class="form-control" placeholder="Please enter a nick name." onblur="checkNickName()">
+                        </div>
+                        <div class="col-sm-2">
+                            <i class="fa fa-check fa-lg" aria-hidden="true" id="namePassed"></i>
+                            <i class="fa fa-times fa-lg" aria-hidden="true" id="nameWrong"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" name="submit" class="btn btn-primary">Log in</button>
+                            <button type="submit" name="submit" class="btn btn-primary" onclick="checkAllFields()">Sign up</button>
                         </div>
                     </div>
                 </form>
                 <div class="row">
-                    {% if error_msg is not None %}
+                    {% if error_type is not None %}
                     <div class="alert alert-danger alert-dismissible col-sm-offset-2 col-sm-8" role="alert">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        This <strong>{{ error_msg }}</strong>
+                        <strong>{{ error_type }}</strong> has been taken.
                     </div>
                     {% endif %}
                 </div>

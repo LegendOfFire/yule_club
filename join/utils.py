@@ -67,3 +67,37 @@ def get_leader_status():
         return 1
     else:
         return 4
+
+
+def getUserObject(nick_name, email):
+    if nick_name != '':
+        try:
+            member = Member.objects.get(nick_name=nick_name)
+        except Member.DoesNotExist:
+            return None
+    else:
+        try:
+            member = Member.objects.get(email_addr__iexact=email)
+        except Member.DoesNotExist:
+            return None
+
+    return member
+
+
+def nicknameUniqueCheck(nick_name):
+    try:
+        Member.objects.get(nick_name=nick_name)
+    except Member.DoesNotExist:
+        return True
+
+    return False
+
+
+def emailUniqueCheck(email):
+    try:
+        # Case-insensitive query
+        Member.objects.get(email_addr__iexact=email)
+    except Member.DoesNotExist:
+        return True
+
+    return False

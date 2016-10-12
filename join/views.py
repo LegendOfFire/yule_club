@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from .models import Member, Enrollment
@@ -8,21 +7,34 @@ import utils
 
 # Create your views here.
 def home(request):
+    return redirect(reverse('join:log-in'))
+
+
+def log_in(request):
     context = {}
     return render(request, 'join/login.html', context)
 
 
-def create_account(request):
-    context = {}
-    return render(request, 'join/create-account.html', context)
-
-
 def sign_up(request):
-    user_name = request.POST['username']
-    email = request.POST['email']
-    current_time = timezone.now()
+    context = {'error_type': None}
+    return render(request, 'join/signup.html', context)
 
-    member = Member(user_name=user_name, email_addr=email, is_joined=False,
+
+def sign_up_handling(request):
+    nick_name = request.POST['nickname']
+    email = request.POST['email']
+
+    # Check if nick_name or email has already been registered
+    if not utils.emailUniqueCheck(email):
+        error_type = "email"
+        return render(request, 'join/signup.html', {'error_type': error_type})
+
+    if not utils.nicknameUniqueCheck(nick_name):
+        error_type = "nickname"
+        return render(request, 'join/signup.html', {'error_type': error_type})
+
+    current_time = timezone.now()
+    member = Member(nick_name=nick_name, email_addr=email, is_joined=False,
                     reg_date=current_time, join_times=0)
     member.save()
 
@@ -47,12 +59,15 @@ def sign_up(request):
 
 
 def sign_in(request):
-    user_name = request.POST['username']
-    # qurey if user exists, other wise raise exception
-    try:
-        member = Member.objects.get(user_name=user_name)
-    except Member.DoesNotExist:
-        raise Http404("User does not exist")
+    nick_name = request.POST['nickname']
+    email = request.POST['email']
+
+    member = utils.getUserObject(nick_name, email)
+
+    if member is None:
+        error_msg = "The nick name or email is not an authorized user. \
+                    Please check."
+        return render(request, 'join/login.html', {'error_msg': error_msg})
 
     paticipants = utils.get_all_paticipants()
 
